@@ -251,8 +251,8 @@ To start we change the default values to our own values.
 ```
 
 We need to configure the following aliases:
-- ns1.sistema.test. will be an alias of tierra.sistema.test.
-- ns2.sistema.test. will be an alias of venus.sistema.test.
+- **ns1.sistema.test.** will be an alias of **tierra.sistema.test.**
+- **ns2.sistema.test.** will be an alias of **venus.sistema.test.**
 
 ```bash
 $TTL	86400
@@ -268,4 +268,30 @@ $TTL	86400
 
 ns1.sistema.test IN CNAME tierra.sistema.test.
 ns2.sistema.test IN CNAME venus.sistema.test.
+```
+
+**mail.sistema.test.** will be an alias of **marte.sistema.test.**
+
+You can add $ORIGIN that defines the base domain or root to be used for relative names in the file.
+
+```bash
+$TTL	86400
+$ORIGIN sistema.test.
+@	IN	SOA	tierra.sistema.test. root.sistema.test. (
+			      1		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			  7200 )	; Negative Cache TTL
+;
+@	IN	NS	tierra
+@	IN	NS 	venus
+
+ns1 IN CNAME tierra
+ns2 IN CNAME venus
+mail IN CNAME marte
+
+tierra IN A 192.168.57.103
+venus IN A 192.168.57.102
+marte IN A 192.168.57.104
 ```
