@@ -260,19 +260,19 @@ We need to configure the following aliases:
 - **ns2.sistema.test.** will be an alias of **venus.sistema.test.**
 
 ```bash
-$TTL	86400
-@	IN	SOA	tierra.sistema.test. root.sistema.test. (
-			      1		; Serial
-			 604800		; Refresh
-			  86400		; Retry
-			2419200		; Expire
-			  7200 )	; Negative Cache TTL
-;
-@	IN	NS	tierra.sistema.test.
-@	IN	NS 	venus.sistema.test.
+  $TTL	86400
+  @	IN	SOA	tierra.sistema.test. root.sistema.test. (
+              1		; Serial
+        604800		; Refresh
+          86400		; Retry
+        2419200		; Expire
+          7200 )	; Negative Cache TTL
+  ;
+  @	IN	NS	tierra.sistema.test.
+  @	IN	NS 	venus.sistema.test.
 
-ns1.sistema.test IN CNAME tierra.sistema.test.
-ns2.sistema.test IN CNAME venus.sistema.test.
+  ns1.sistema.test IN CNAME tierra.sistema.test.
+  ns2.sistema.test IN CNAME venus.sistema.test.
 ```
 
 **mail.sistema.test.** will be an alias of **marte.sistema.test.**
@@ -280,25 +280,25 @@ ns2.sistema.test IN CNAME venus.sistema.test.
 You can add `$ORIGIN` that defines the base domain or root to be used for relative names in the file.
 
 ```bash
-$TTL	86400
-$ORIGIN sistema.test.
-@	IN	SOA	tierra.sistema.test. root.sistema.test. (
-			      1		; Serial
-			 604800		; Refresh
-			  86400		; Retry
-			2419200		; Expire
-			  7200 )	; Negative Cache TTL
-;
-@	IN	NS	tierra
-@	IN	NS 	venus
+  $TTL	86400
+  $ORIGIN sistema.test.
+  @	IN	SOA	tierra.sistema.test. root.sistema.test. (
+              1		; Serial
+        604800		; Refresh
+          86400		; Retry
+        2419200		; Expire
+          7200 )	; Negative Cache TTL
+  ;
+  @	IN	NS	tierra
+  @	IN	NS 	venus
 
-ns1 IN CNAME tierra
-ns2 IN CNAME venus
-mail IN CNAME marte
+  ns1 IN CNAME tierra
+  ns2 IN CNAME venus
+  mail IN CNAME marte
 
-tierra IN A 192.168.57.103
-venus IN A 192.168.57.102
-marte IN A 192.168.57.104
+  tierra IN A 192.168.57.103
+  venus IN A 192.168.57.102
+  marte IN A 192.168.57.104
 ```
 
 The **marte.sistema.test.** device will act as mail server for the mail domain **sistema.test.**
@@ -308,30 +308,68 @@ The **marte.sistema.test.** device will act as mail server for the mail domain *
 We need to add mercurio.sistema.test too.
 
 ```bash
-$TTL	86400
-$ORIGIN sistema.test.
-@	IN	SOA	tierra.sistema.test. root.sistema.test. (
-			      1		; Serial
-			 604800		; Refresh
-			  86400		; Retry
-			2419200		; Expire
-			  7200 )	; Negative Cache TTL
-;
-;Name servers DNS
-@	IN	NS	tierra
-@	IN	NS	venus
+  $TTL	86400
+  $ORIGIN sistema.test.
+  @	IN	SOA	tierra.sistema.test. root.sistema.test. (
+              1		; Serial
+        604800		; Refresh
+          86400		; Retry
+        2419200		; Expire
+          7200 )	; Negative Cache TTL
+  ;
+  ;Name servers DNS
+  @	IN	NS	tierra
+  @	IN	NS	venus
 
-;Mail server
-@	IN	MX	marte
+  ;Mail server
+  @	IN	MX	marte
 
-;Alias
-ns1 IN CNAME tierra
-ns2 IN CNAME venus
-mail IN CNAME marte
+  ;Alias
+  ns1 IN CNAME tierra
+  ns2 IN CNAME venus
+  mail IN CNAME marte
 
-;Server directions
-mercurio IN A 192.168.57.101
-venus IN A 192.168.57.102
-tierra IN A 192.168.57.103
-marte IN A 192.168.57.104
+  ;Server directions
+  mercurio IN A 192.168.57.101
+  venus IN A 192.168.57.102
+  tierra IN A 192.168.57.103
+  marte IN A 192.168.57.104
+```
+
+### Reverse Zone sistema.test.rev
+
+Is necessary to add a line in the VagrantFile to add in the machine this file, only in the master machine.
+
+```ruby
+  master.vm.provision "shell", name: "master-dns" ,inline: <<-SHELL
+        cp -v /vagrant/files/named /etc/default/
+        cp -v /vagrant/files/named.conf.options /etc/bind
+        cp -v /vagrant/files/master/named.conf.local /etc/bind
+        cp -v /vagrant/files/sistema.test.dns /var/lib/bind
+        cp -v /vagrant/files/sistema.test.rev /var/lib/bind
+        systemctl restart named
+      SHELL
+```
+
+The inverse zone convert IP addresses into domain names. This is done using `PTR` (Pointer Records).
+
+```bash
+  $TTL	86400
+  $ORIGIN 57.168.192.in-addr.arpa.
+  @	IN	SOA	tierra.sistema.test. root.sistema.test. (
+              1		; Serial
+        604800		; Refresh
+          86400		; Retry
+        2419200		; Expire
+          7200 )	; Negative Cache TTL
+  ;
+  ; Name servers
+  @	IN	NS	tierra.sistema.test.
+  @	IN	NS	venus.sistema.test.
+
+  ; PTR records for reverse DNS
+  101	IN	PTR	mercurio.sistema.test.
+  102	IN	PTR	venus.sistema.test.
+  103	IN	PTR	tierra.sistema.test.
+  104	IN	PTR	marte.sistema.test.
 ```
