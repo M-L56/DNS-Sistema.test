@@ -345,7 +345,7 @@ We need to add mercurio.sistema.test too.
   @	IN	NS	venus.sistema.test.
 
   ;Mail server
-  @	IN	MX	marte.sistema.test.
+  @	IN	MX	10 marte.sistema.test.
 
   ;Alias
   ns1 IN CNAME tierra.sistema.test.
