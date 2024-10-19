@@ -107,6 +107,17 @@ I change the path in the VagrantFile to be correct.
     SHELL
 ```
 
+Is necessary to add this two lines.
+- `allow-query` Allows queries to be made to the DNS server.
+- `listen-on port 53` Specifies on which IP addresses and ports the DNS server will be listening for DNS requests.
+
+```bash
+  options{
+    allow-query { trusted; };
+    listen-on port 53 { 192.168.57.103; };
+  };  
+```
+
 Is required for this project set `dnssec-validation` to `yes`.
 (We will enable or disable dnssec, as the auto option may have problems with the router.)
 
@@ -229,7 +240,6 @@ The slave server will be **venus.sistema.test** and will have **tierra.sistema.t
       masters { 192.168.57.103; };
   };
 ```
-
 
 ### Direct Zone sistema.test.dns
 
