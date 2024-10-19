@@ -16,7 +16,7 @@ $TTL	86400
 @	IN	NS	venus.sistema.test.
 
 ;Mail server
-@	IN	MX	10 marte.sistema.test.
+@	IN	MX	marte.sistema.test.
 
 ;Alias
 ns1 IN CNAME tierra.sistema.test.
