@@ -137,7 +137,17 @@ The **cache time** of negative responses of zones (direct and reverse) will be t
 
 ```bash
   options {
-      max-ncache-ttl 7200; 
+      max-ncache-ttl 7200;
+       
+  };
+```
+
+Those queries that the server receives for which it is not authorized, you must forward them to DNS server **208.67.222.222**.
+
+```bash
+  options{
+    forwarders { 208.67.222.222; };
+      forward only;
   };
 ```
 
