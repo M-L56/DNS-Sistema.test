@@ -83,10 +83,10 @@ This file is simply used to group the configuration files that we will use. Thes
 
 ### named.conf.options
 This file is in `/etc/bind` as we can see before, and this one is important, so I copy on my vagrant, inside the files folder.
-
 ```bash
   cp /etc/bind/named.conf.options /vagrant/files
 ```
+In this file, parameters are specified that affect the general behavior of the server. It is essential for defining the overall operation and policies of the DNS server.
 
 I change the path in the VagrantFile to be correct.
 ```ruby
@@ -103,7 +103,6 @@ I change the path in the VagrantFile to be correct.
     SHELL
 ```
 
-This file is used to configure the DNS server. 
 Is required for this project set `dnssec-validation` to `yes`.
 (We will enable or disable dnssec, as the auto option may have problems with the router.)
 
@@ -132,4 +131,58 @@ To active the recursivity we add two lines inside options.
     recursion yes;
     allow-recursion { trusted; };
   };  
+```
+
+### named.conf.local
+This file is in `/etc/bind` as we can see before, so I copy on my vagrant, inside the files folder.
+
+```bash
+  cp /etc/bind/named.conf.local /vagrant/files
+```
+
+In this file, the zones for which the server is authoritative are specified, whether they are **direct zones** (name-to-IP resolution) or **reverse zones** (IP-to-name resolution). It is key to managing the specific DNS zones and records on the server.
+
+Inside **files** folder, we will create two folders, one for the configuration of the master and other for the configuration of the slave.
+
+We need to add the path inside the VagrantFile
+
+```ruby
+  master.vm.provision "shell", name: "master-dns" ,inline: <<-SHELL
+        cp -v /vagrant/files/named /etc/default/
+        cp -v /vagrant/files/named.conf.options /etc/bind
+        cp -v /vagrant/files/master/named.conf.local /etc/bind
+        systemctl restart named
+      SHELL
+
+  slave.vm.provision "shell", name: "salve-dns" ,inline: <<-SHELL
+      cp -v /vagrant/files/named /etc/default/
+      cp -v /vagrant/files/named.conf.options /etc/bind
+      cp -v /vagrant/files/slave/named.conf.local /etc/bind
+      systemctl restart named
+    SHELL
+```
+
+#### MASTER named.conf.local
+
+The master server will be **tierra.sistema.test** and will have authority over the _direct_ and _reverse_ zone.
+
+***Direct Zone***
+
+In `/var/lib/bind/system.test.dns`, there will be located the resources records for the tierra.sistema.test zone.
+
+```bash
+  zone "tierra.sistema.test" {
+    type master;
+    file "/var/lib/bind/sistema.test.dns";
+  };
+```
+***Reverse Zone***
+
+This `/var/lib/bind/sistema.test.rev`, indicates the location of the file that contains the resource records for the reverse zone.
+
+```bash
+  zone "57.168.192.in-addr.arpa"{
+      type master;
+      file "/var/lib/bind/sistema.test.rev";
+  };
 ```
