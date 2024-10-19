@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "master" do |master|
     master.vm.network "private_network", ip: "192.168.57.103"
     master.vm.provision "shell", name: "master-dns" ,inline: <<-SHELL
-      cp -v /vagrant/named /etc/default/
+      cp -v /vagrant/files/named /etc/default/
       cp -v /vagrant/named.conf.options /etc/bind
       systemctl restart named
     SHELL
@@ -21,7 +21,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "slave" do |slave|
     slave.vm.network "private_network", ip: "192.168.57.102"
     slave.vm.provision "shell", name: "salve-dns" ,inline: <<-SHELL
-      cp -v /vagrant/named /etc/default/
+      cp -v /vagrant/files/named /etc/default/
       cp -v /vagrant/named.conf.options /etc/bind
       systemctl restart named
     SHELL
