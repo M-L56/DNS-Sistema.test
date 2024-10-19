@@ -4,7 +4,6 @@
 ; Instead, copy it, edit named.conf, and use that copy.
 ;
 $TTL	86400
-$ORIGIN 57.168.192.in-addr.arpa.
 @	IN	SOA	tierra.sistema.test. root.sistema.test. (
 			      1		; Serial
 			 604800		; Refresh
