@@ -12,13 +12,20 @@ $ORIGIN sistema.test.
 			2419200		; Expire
 			  7200 )	; Negative Cache TTL
 ;
+;Name servers DNS
 @	IN	NS	tierra
-@	IN	NS 	venus
+@	IN	NS	venus
 
+;Mail server
+@	IN	MX	marte
+
+;Alias
 ns1 IN CNAME tierra
 ns2 IN CNAME venus
 mail IN CNAME marte
 
-tierra IN A 192.168.57.103
+;Server directions
+mercurio IN A 192.168.57.101
 venus IN A 192.168.57.102
+tierra IN A 192.168.57.103
 marte IN A 192.168.57.104

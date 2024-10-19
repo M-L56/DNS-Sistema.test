@@ -44,9 +44,10 @@ To start with DNS I create a provision with basic files. These files are necessa
 
 To find this file it´s in `/etc/default`, so I copy it on my vagrant.
 
-```bash
-  cp /etc/default/named /vagrant/files
-```
+>Inside the machine
+>```bash
+>  cp /etc/default/named /vagrant/files
+>```
 
 With this file, we establish the IPv4 protocol so that it only listens there.
 
@@ -83,9 +84,12 @@ This file is simply used to group the configuration files that we will use. Thes
 
 ### named.conf.options
 This file is in `/etc/bind` as we can see before, and this one is important, so I copy on my vagrant, inside the files folder.
-```bash
-  cp /etc/bind/named.conf.options /vagrant/files
-```
+
+>Inside the machine
+>```bash
+>  cp /etc/bind/named.conf.options /vagrant/files
+>```
+
 In this file, parameters are specified that affect the general behavior of the server. It is essential for defining the overall operation and policies of the DNS server.
 
 I change the path in the VagrantFile to be correct.
@@ -154,9 +158,10 @@ Those queries that the server receives for which it is not authorized, you must 
 ### named.conf.local
 This file is in `/etc/bind` as we can see before, so I copy on my vagrant, inside the files folder.
 
-```bash
-  cp /etc/bind/named.conf.local /vagrant/files
-```
+>Inside the machine
+>```bash
+>  cp /etc/bind/named.conf.local /vagrant/files
+>```
 
 In this file, the zones for which the server is authoritative are specified, whether they are **direct zones** (name-to-IP resolution) or **reverse zones** (IP-to-name resolution). It is key to managing the specific DNS zones and records on the server.
 
@@ -272,7 +277,7 @@ ns2.sistema.test IN CNAME venus.sistema.test.
 
 **mail.sistema.test.** will be an alias of **marte.sistema.test.**
 
-You can add $ORIGIN that defines the base domain or root to be used for relative names in the file.
+You can add `$ORIGIN` that defines the base domain or root to be used for relative names in the file.
 
 ```bash
 $TTL	86400
@@ -293,5 +298,40 @@ mail IN CNAME marte
 
 tierra IN A 192.168.57.103
 venus IN A 192.168.57.102
+marte IN A 192.168.57.104
+```
+
+The **marte.sistema.test.** device will act as mail server for the mail domain **sistema.test.**
+
+`MX` specifies that this is a Mail Exchange type record.
+
+We need to add mercurio.sistema.test too.
+
+```bash
+$TTL	86400
+$ORIGIN sistema.test.
+@	IN	SOA	tierra.sistema.test. root.sistema.test. (
+			      1		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			  7200 )	; Negative Cache TTL
+;
+;Name servers DNS
+@	IN	NS	tierra
+@	IN	NS	venus
+
+;Mail server
+@	IN	MX	marte
+
+;Alias
+ns1 IN CNAME tierra
+ns2 IN CNAME venus
+mail IN CNAME marte
+
+;Server directions
+mercurio IN A 192.168.57.101
+venus IN A 192.168.57.102
+tierra IN A 192.168.57.103
 marte IN A 192.168.57.104
 ```
