@@ -133,6 +133,14 @@ To active the recursivity we add two lines inside options.
   };  
 ```
 
+The **cache time** of negative responses of zones (direct and reverse) will be two hours.
+
+```bash
+  options {
+      max-ncache-ttl 7200; 
+  };
+```
+
 ### named.conf.local
 This file is in `/etc/bind` as we can see before, so I copy on my vagrant, inside the files folder.
 

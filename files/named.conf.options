@@ -5,6 +5,8 @@ acl "trusted"{
 options {
 	directory "/var/cache/bind";
 
+	max-ncache-ttl 7200;
+
 	// forwarders {
 	// 	0.0.0.0;
 	// };
