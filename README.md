@@ -114,7 +114,10 @@ Is necessary to add this two lines.
 ```bash
   options{
     allow-query { trusted; };
-    listen-on port 53 { 192.168.57.103; };
+    listen-on port 53 { 
+      192.168.57.103; 
+      192.168.57.102;
+      };
   };  
 ```
 
