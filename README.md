@@ -168,7 +168,7 @@ The master server will be **tierra.sistema.test** and will have authority over t
 
 ***Direct Zone***
 
-In `/var/lib/bind/system.test.dns`, there will be located the resources records for the tierra.sistema.test zone.
+In `/var/lib/bind/system.test.dns`, there will be located the resources records for the **tierra.sistema.test** zone.
 
 ```bash
   zone "tierra.sistema.test" {
@@ -184,5 +184,16 @@ This `/var/lib/bind/sistema.test.rev`, indicates the location of the file that c
   zone "57.168.192.in-addr.arpa"{
       type master;
       file "/var/lib/bind/sistema.test.rev";
+  };
+```
+
+#### SLAVE named.conf.local
+
+The slave server will be **venus.sistema.test** and will have **tierra.sistema.test** as a master.
+
+```bash
+  zone "venus.sistema.test" {
+      type slave;
+      masters {192.168.57.103; };
   };
 ```
