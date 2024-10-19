@@ -193,7 +193,7 @@ The master server will be **tierra.sistema.test** and will have authority over t
 In `/var/lib/bind/system.test.dns`, there will be located the resources records for the **tierra.sistema.test** zone.
 
 ```bash
-  zone "tierra.sistema.test" {
+  zone "sistema.test" {
     type master;
     file "/var/lib/bind/sistema.test.dns";
   };
@@ -211,14 +211,26 @@ This `/var/lib/bind/sistema.test.rev`, indicates the location of the file that c
 
 #### SLAVE named.conf.local
 
+***Direct Zone***
 The slave server will be **venus.sistema.test** and will have **tierra.sistema.test** as a master.
 
 ```bash
-  zone "venus.sistema.test" {
+  zone "sistema.test" {
       type slave;
       masters {192.168.57.103; };
   };
 ```
+
+***Reverse Zone***
+```bash
+  zone "57.168.192.in-addr.arpa" {
+      type slave;
+      file /var/lib/bind/sistema.test.rev;
+      masters { 192.168.57.103; };
+  };
+```
+
+
 ### Direct Zone sistema.test.dns
 
 To create the zone, there are a template in the folder `/etc/bind` called `db.empty`. Inside the machine we will create the **sistema.test.dns** file in `/var/lib/bind`, and copy the template into it. Later we copy it inside the files folder.

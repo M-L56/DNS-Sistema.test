@@ -6,7 +6,13 @@
 // organization
 //include "/etc/bind/zones.rfc1918";
 
-zone "venus.sistema.test" {
+zone "sistema.test" {
     type slave;
     masters {192.168.57.103; };
+};
+
+zone "57.168.192.in-addr.arpa" {
+    type slave;
+    file /var/lib/bind/sistema.test.rev;
+    masters { 192.168.57.103; };
 };
