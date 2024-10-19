@@ -304,11 +304,8 @@ We need to configure the following aliases:
 
 **mail.sistema.test.** will be an alias of **marte.sistema.test.**
 
-You can add `$ORIGIN` that defines the base domain or root to be used for relative names in the file.
-
 ```bash
   $TTL	86400
-  $ORIGIN sistema.test.
   @	IN	SOA	tierra.sistema.test. root.sistema.test. (
               1		; Serial
         604800		; Refresh
@@ -316,16 +313,16 @@ You can add `$ORIGIN` that defines the base domain or root to be used for relati
         2419200		; Expire
           7200 )	; Negative Cache TTL
   ;
-  @	IN	NS	tierra
-  @	IN	NS 	venus
+  @	IN	NS	tierra.sistema.test.
+  @	IN	NS 	venus.sistema.test.
 
-  ns1 IN CNAME tierra
-  ns2 IN CNAME venus
-  mail IN CNAME marte
+  ns1 IN CNAME tierra.sistema.test.
+  ns2 IN CNAME venus.sistema.test.
+  mail IN CNAME marte.sistema.test.
 
-  tierra IN A 192.168.57.103
-  venus IN A 192.168.57.102
-  marte IN A 192.168.57.104
+  tierra.sistema.test. IN A 192.168.57.103
+  venus.sistema.test. IN A 192.168.57.102
+  marte.sistema.test. IN A 192.168.57.104
 ```
 
 The **marte.sistema.test.** device will act as mail server for the mail domain **sistema.test.**
@@ -336,7 +333,6 @@ We need to add mercurio.sistema.test too.
 
 ```bash
   $TTL	86400
-  $ORIGIN sistema.test.
   @	IN	SOA	tierra.sistema.test. root.sistema.test. (
               1		; Serial
         604800		; Refresh
@@ -345,22 +341,22 @@ We need to add mercurio.sistema.test too.
           7200 )	; Negative Cache TTL
   ;
   ;Name servers DNS
-  @	IN	NS	tierra
-  @	IN	NS	venus
+  @	IN	NS	tierra.sistema.test.
+  @	IN	NS	venus.sistema.test.
 
   ;Mail server
-  @	IN	MX	marte
+  @	IN	MX	marte.sistema.test.
 
   ;Alias
-  ns1 IN CNAME tierra
-  ns2 IN CNAME venus
-  mail IN CNAME marte
+  ns1 IN CNAME tierra.sistema.test.
+  ns2 IN CNAME venus.sistema.test.
+  mail IN CNAME marte.sistema.test.
 
   ;Server directions
-  mercurio IN A 192.168.57.101
-  venus IN A 192.168.57.102
-  tierra IN A 192.168.57.103
-  marte IN A 192.168.57.104
+  mercurio.sistema.test. IN A 192.168.57.101
+  venus.sistema.test. IN A 192.168.57.102
+  tierra.sistema.test. IN A 192.168.57.103
+  marte.sistema.test. IN A 192.168.57.104
 ```
 
 ### Reverse Zone sistema.test.rev
@@ -382,7 +378,6 @@ The inverse zone convert IP addresses into domain names. This is done using `PTR
 
 ```bash
   $TTL	86400
-  $ORIGIN 57.168.192.in-addr.arpa.
   @	IN	SOA	tierra.sistema.test. root.sistema.test. (
               1		; Serial
         604800		; Refresh
