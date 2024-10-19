@@ -215,3 +215,57 @@ The slave server will be **venus.sistema.test** and will have **tierra.sistema.t
       masters {192.168.57.103; };
   };
 ```
+### Direct Zone sistema.test.dns
+
+To create the zone, there are a template in the folder `/etc/bind` called `db.empty`. Inside the machine we will create the **sistema.test.dns** file in `/var/lib/bind`, and copy the template into it. Later we copy it inside the files folder.
+
+>Inside the machine
+>```bash
+> sudo cp /etc/bind/db.empty /var/lib/bind/sistema.test.dns
+> cp /var/lib/bind/sistema.test.dns /vagrant/files
+>```
+
+So we insert the configuration in the VagrantFile. But only in the master server.
+
+```ruby
+  master.vm.provision "shell", name: "master-dns" ,inline: <<-SHELL
+        cp -v /vagrant/files/named /etc/default/
+        cp -v /vagrant/files/named.conf.options /etc/bind
+        cp -v /vagrant/files/master/named.conf.local /etc/bind
+        cp -v /vagrant/files/sistema.test.dns /var/lib/bind
+        systemctl restart named
+      SHELL
+```
+
+To start we change the default values to our own values.
+```bash
+  $TTL	86400
+  @	IN	SOA	tierra.sistema.test. root.sistema.test. (
+              1		; Serial
+        604800		; Refresh
+          86400		; Retry
+        2419200		; Expire
+          7200 )	; Negative Cache TTL
+  ;
+  @	IN	NS	tierra.sistema.test.
+```
+
+We need to configure the following aliases:
+- ns1.sistema.test. will be an alias of tierra.sistema.test.
+- ns2.sistema.test. will be an alias of venus.sistema.test.
+
+```bash
+$TTL	86400
+@	IN	SOA	tierra.sistema.test. root.sistema.test. (
+			      1		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			  7200 )	; Negative Cache TTL
+;
+@	IN	NS	tierra.sistema.test.
+@	IN	NS 	venus.sistema.test.
+
+ns1.sistema.test IN CNAME tierra.sistema.test.
+ns2.sistema.test IN CNAME venus.sistema.test.
+```
