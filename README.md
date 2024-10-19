@@ -112,8 +112,7 @@ Is required for this project set `dnssec-validation` to `yes`.
 
 ```bash
   options{
-    dnssec-enable yes;
-      dnssec-validation yes; 
+    dnssec-validation yes; 
   };  
 ```
 
