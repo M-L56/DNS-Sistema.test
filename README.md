@@ -113,3 +113,23 @@ Is required for this project set `dnssec-validation` to `yes`.
       dnssec-validation yes; 
   };  
 ```
+
+Servers will allow recursive queries only to computers on the network `127.0.0.0/8` and on the network `192.168.57.0/24`.
+
+To set the IPs we use ACL (Access Control List) outside the options.
+
+```bash
+  acl "trusted"{
+    127.0.0.0/8;
+    192.168.57.0/24;
+  };
+```
+
+To active the recursivity we add two lines inside options.
+
+```bash
+  options{
+    recursion yes;
+    allow-recursion { trusted; };
+  };  
+```
