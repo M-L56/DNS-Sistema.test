@@ -13,16 +13,16 @@ $ORIGIN sistema.test.
 			  86400 )	; Negative Cache TTL
 ;
 ;Name servers DNS
-@	IN	NS	tierra
-@	IN	NS	venus
+@	IN	NS	tierra.
+@	IN	NS	venus.
 
 ;Mail server
-@	IN	MX	marte
+@	IN	MX	10 marte.
 
 ;Alias
-ns1 IN CNAME tierra
-ns2 IN CNAME venus
-mail IN CNAME marte
+ns1 IN CNAME tierra.
+ns2 IN CNAME venus.
+mail IN CNAME marte.
 
 ;Server directions
 mercurio IN A 192.168.57.101
