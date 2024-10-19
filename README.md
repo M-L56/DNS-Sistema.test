@@ -45,14 +45,14 @@ To start with DNS I create a provision with basic files. These files are necessa
 To find this file it´s in `/etc/default`, so I copy it on my vagrant.
 
 ```bash
-cp /etc/default/named /vagrant
+  cp /etc/default/named /vagrant/files
 ```
 
 With this file, we establish the IPv4 protocol so that it only listens there.
 
 ```bash
-# startup options for the server
-OPTIONS="-u bind -4"
+  # startup options for the server
+  OPTIONS="-u bind -4"
 ```
 Inside the VagratFile I change the path of these files in both machines.
 
@@ -68,4 +68,48 @@ Inside the VagratFile I change the path of these files in both machines.
           cp -v /vagrant/named.conf.options /etc/bind
           systemctl restart named
       SHELL
+```
+
+### named.conf
+This file is in `/etc/bind`. Not necessary in our case.
+
+This file is simply used to group the configuration files that we will use. These 3 includes refer to the 3 different files where we will have to perform the real configuration, located in the same directory.
+
+```bash
+  include "/etc/bind/named.conf.options";
+  include "/etc/bind/named.conf.local";
+  include "/etc/bind/named.conf.default-zones";
+```
+
+### named.conf.options
+This file is in `/etc/bind` as we can see before, and this one is important, so I copy on my vagrant, inside the files folder.
+
+```bash
+  cp /etc/bind/named.conf.options /vagrant/files
+```
+
+I change the path in the VagrantFile to be correct.
+```ruby
+  master.vm.provision "shell", name: "master-dns" ,inline: <<-SHELL
+      cp -v /vagrant/files/named /etc/default/
+      cp -v /vagrant/files/named.conf.options /etc/bind
+      systemctl restart named
+    SHELL
+
+  slave.vm.provision "shell", name: "salve-dns" ,inline: <<-SHELL
+      cp -v /vagrant/files/named /etc/default/
+      cp -v /vagrant/files/named.conf.options /etc/bind
+      systemctl restart named
+    SHELL
+```
+
+This file is used to configure the DNS server. 
+Is required for this project set `dnssec-validation` to `yes`.
+(We will enable or disable dnssec, as the auto option may have problems with the router.)
+
+```bash
+  options{
+    dnssec-enable yes;
+      dnssec-validation yes; 
+  };  
 ```
