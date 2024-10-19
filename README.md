@@ -243,6 +243,12 @@ The slave server will be **venus.sistema.test** and will have **tierra.sistema.t
 
 ### Direct Zone sistema.test.dns
 
+>[!WARNING]
+> Is important to add this line into the VagrantFile of master machine.
+>```bash
+>chown root:bind /var/lib/bind/*
+>```
+
 To create the zone, there are a template in the folder `/etc/bind` called `db.empty`. Inside the machine we will create the **sistema.test.dns** file in `/var/lib/bind`, and copy the template into it. Later we copy it inside the files folder.
 
 >Inside the machine

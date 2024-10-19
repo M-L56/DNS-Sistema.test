@@ -5,7 +5,7 @@
 ;
 $TTL	86400
 $ORIGIN 57.168.192.in-addr.arpa.
-@	IN	SOA	tierra root.sistema.test. (
+@	IN	SOA	tierra.sistema.test. root.sistema.test. (
 			      1		; Serial
 			 604800		; Refresh
 			  86400		; Retry
